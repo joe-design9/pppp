@@ -1,0 +1,624 @@
+<title>Leonida Hub</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one column of frosted-glass panels floating over a living Leonida sunset sky; a floating glass tab bar on phones. */
+:root{
+  color-scheme: dark;
+  --sky-top:#1b1035;
+  --sky-mid:#6b2a6e;
+  --sky-low:#f0705a;
+  --sea:#0d3a4a;
+  --ink:#fdf4f0;
+  --ink-soft:rgba(253,244,240,.72);
+  --ink-faint:rgba(253,244,240,.5);
+  --sun:#ffb469;
+  --flamingo:#ff5f9e;
+  --palm:#3fd6b8;
+  --glass:rgba(255,255,255,.10);
+  --glass-strong:rgba(255,255,255,.18);
+  --glass-edge:rgba(255,255,255,.35);
+  --glass-shadow:rgba(10,4,30,.35);
+  --font-display:"Big Shoulders Display","Impact","Arial Narrow",sans-serif;
+  --font-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--sky-top)}
+body{
+  background:var(--sky-top);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.55;
+  min-height:100%;
+  overflow-x:hidden;
+}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sky-top)}
+
+.wrap{
+  position:relative;z-index:1;
+  max-width:1080px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:20px 120px;
+  display:flex;flex-direction:column;gap:28px;
+}
+
+/* ---------- Liquid glass material ---------- */
+.glass{
+  position:relative;
+  background:linear-gradient(155deg,var(--glass-strong),var(--glass) 45%,rgba(255,255,255,.06));
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  backdrop-filter:blur(22px) saturate(180%);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:28px;
+  box-shadow:
+    inset 0 1px 0 var(--glass-edge),
+    inset 0 -1px 0 rgba(255,255,255,.08),
+    0 18px 40px -18px var(--glass-shadow);
+  isolation:isolate;
+}
+.glass::after{ /* specular highlight that follows the pointer */
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:radial-gradient(420px circle at var(--mx,30%) var(--my,0%),rgba(255,255,255,.22),transparent 55%);
+  opacity:.9;transition:opacity .3s;
+}
+
+/* ---------- Header ---------- */
+header.top{
+  position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:5;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 12px 10px 18px;border-radius:999px;
+}
+.brand{display:flex;align-items:baseline;gap:10px;font-family:var(--font-display);font-weight:900;font-size:1.5rem;letter-spacing:.02em;text-transform:uppercase}
+.brand small{font-family:var(--font-mono);font-size:.68rem;font-weight:500;letter-spacing:.12em;color:var(--ink-faint)}
+nav.links{display:flex;gap:4px}
+nav.links a{
+  color:var(--ink-soft);text-decoration:none;font-weight:600;font-size:.92rem;
+  padding:8px 14px;border-radius:999px;transition:background .2s,color .2s;
+}
+nav.links a:hover,nav.links a:focus-visible{background:rgba(255,255,255,.14);color:var(--ink);outline:none}
+
+/* ---------- Hero ---------- */
+.hero{padding-block:36px 8px;display:grid;gap:22px}
+.eyebrow{font-family:var(--font-mono);font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sun)}
+h1{
+  font-family:var(--font-display);font-weight:900;text-transform:uppercase;
+  font-size:clamp(3.4rem,13vw,9rem);line-height:.86;margin:0;letter-spacing:-.01em;
+  text-wrap:balance;
+  background:linear-gradient(180deg,#fff 10%,var(--sun) 55%,var(--flamingo) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 24px rgba(255,95,158,.35));
+}
+.lede{max-width:58ch;color:var(--ink-soft);font-size:1.08rem;margin:0}
+
+.countdown{padding:22px;display:grid;gap:14px}
+.count-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.unit{padding:14px 8px;border-radius:20px;text-align:center;background:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.unit b{display:block;font-family:var(--font-display);font-weight:800;font-size:clamp(2.2rem,8vw,4rem);line-height:1;font-variant-numeric:tabular-nums}
+.unit span{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.count-meta{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;font-size:.88rem;color:var(--ink-soft)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:rgba(63,214,184,.18);color:var(--palm);font-weight:600;font-size:.8rem}
+.pill.warn{background:rgba(255,180,105,.18);color:var(--sun)}
+
+/* ---------- Sections ---------- */
+section{display:grid;gap:16px;scroll-margin-top:90px}
+h2{font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:clamp(2rem,6vw,3.2rem);line-height:.95;margin:0;text-wrap:balance}
+.sub{color:var(--ink-soft);margin:0;max-width:62ch}
+
+/* Regions */
+.regions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px}
+.region-list{padding:8px;display:flex;flex-direction:column;gap:4px}
+.region-list button{
+  all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:14px 16px;border-radius:20px;font-weight:600;color:var(--ink-soft);transition:background .2s,color .2s;
+}
+.region-list button span{font-family:var(--font-mono);font-size:.7rem;color:var(--ink-faint);letter-spacing:.08em}
+.region-list button:hover{background:rgba(255,255,255,.08);color:var(--ink)}
+.region-list button:focus-visible{outline:2px solid var(--sun);outline-offset:-2px}
+.region-list button[aria-selected="true"]{background:rgba(255,255,255,.2);color:var(--ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.region-detail{padding:24px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.region-detail h3{font-family:var(--font-display);font-weight:800;font-size:2.4rem;text-transform:uppercase;margin:0;line-height:1}
+.region-detail p{margin:0;color:var(--ink-soft)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.78rem;font-weight:600;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.1)}
+.coords{font-family:var(--font-mono);font-size:.74rem;color:var(--ink-faint);letter-spacing:.06em}
+
+/* Characters */
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.char{padding:24px;display:grid;gap:10px;min-width:0}
+.char .role{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
+.char:nth-child(1) .role{color:var(--flamingo)}
+.char:nth-child(2) .role{color:var(--palm)}
+.char h3{font-family:var(--font-display);font-weight:900;text-transform:uppercase;font-size:clamp(2.2rem,6vw,3.4rem);line-height:.9;margin:0}
+.char p{margin:0;color:var(--ink-soft)}
+.cast{padding:18px 22px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.cast strong{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:500}
+
+/* Timeline */
+.timeline{padding:8px 22px}
+.timeline ol{list-style:none;margin:0;padding:0}
+.timeline li{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.timeline li:last-child{border-bottom:0}
+.timeline time{font-family:var(--font-mono);font-size:.8rem;color:var(--sun);padding-top:2px;font-variant-numeric:tabular-nums}
+.timeline li.next time{color:var(--palm)}
+.timeline b{display:block}
+.timeline span{color:var(--ink-soft);font-size:.93rem}
+
+/* Devices */
+.seg{display:inline-flex;padding:4px;border-radius:999px;gap:2px;justify-self:start}
+.seg button{all:unset;cursor:pointer;padding:9px 18px;border-radius:999px;font-weight:700;font-size:.92rem;color:var(--ink-soft)}
+.seg button[aria-selected="true"]{background:rgba(255,255,255,.24);color:var(--ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.seg button:focus-visible{outline:2px solid var(--sun)}
+.device{padding:24px;display:grid;gap:14px}
+.device ol{margin:0;padding-left:1.3em;display:grid;gap:8px;color:var(--ink-soft)}
+.device ol b{color:var(--ink)}
+.note{font-size:.88rem;color:var(--ink-faint);margin:0}
+code{font-family:var(--font-mono);font-size:.85em;background:rgba(255,255,255,.1);padding:1px 6px;border-radius:6px}
+
+/* Checklist */
+.check{padding:10px}
+.check label{display:flex;gap:14px;align-items:center;padding:12px 14px;border-radius:18px;cursor:pointer;transition:background .2s}
+.check label:hover{background:rgba(255,255,255,.07)}
+.check input{appearance:none;width:24px;height:24px;flex:none;border-radius:50%;border:1.5px solid rgba(255,255,255,.5);display:grid;place-items:center;cursor:pointer;transition:background .2s}
+.check input:checked{background:var(--palm);border-color:var(--palm)}
+.check input:checked::after{content:"";width:6px;height:11px;border:solid var(--sky-top);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.check input:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.check input:checked + span{color:var(--ink-faint);text-decoration:line-through}
+.progress{font-family:var(--font-mono);font-size:.78rem;color:var(--ink-faint);padding:4px 14px 10px}
+
+/* Real refraction: Chromium can run an SVG displacement filter on the backdrop,
+   which bends what is behind the panel like a lens. Other browsers keep frosted blur. */
+.liquid .glass{
+  -webkit-backdrop-filter:url(#liquid-lens) blur(3px) saturate(185%) brightness(1.06);
+  backdrop-filter:url(#liquid-lens) blur(3px) saturate(185%) brightness(1.06);
+}
+
+/* Gallery */
+.gallery{display:grid;grid-auto-flow:column;grid-auto-columns:min(78%,560px);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;margin-inline:-4px;padding-inline:4px;scrollbar-width:none}
+.gallery::-webkit-scrollbar{display:none}
+.shot{all:unset;cursor:zoom-in;scroll-snap-align:start;position:relative;border-radius:26px;overflow:hidden;aspect-ratio:16/9;max-width:100%;
+  background:linear-gradient(160deg,var(--sky-mid),var(--sky-low) 70%,var(--sea));box-shadow:0 20px 40px -20px var(--glass-shadow)}
+.shot:focus-visible{outline:3px solid var(--sun);outline-offset:3px}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.shot:hover img{transform:scale(1.04)}
+.shot .cap{position:absolute;left:12px;bottom:12px;right:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 8px 8px 16px;border-radius:999px;font-weight:700;font-size:.9rem}
+.shot .cap span{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.16)}
+.shot .missing{position:absolute;inset:0;display:grid;place-content:center;gap:4px;text-align:center;padding:20px;color:var(--ink-soft);font-size:.85rem}
+.shot .missing b{font-family:var(--font-display);font-size:1.6rem;text-transform:uppercase;color:var(--ink)}
+.credit{font-size:.8rem;color:var(--ink-faint);margin:0}
+.credit a{color:var(--ink-soft)}
+
+.lightbox{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:rgba(8,4,20,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  padding:calc(env(safe-area-inset-top,0px) + 16px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 16px) max(16px,env(safe-area-inset-left,0px))}
+.lightbox img{max-width:100%;max-height:78vh;border-radius:22px;box-shadow:0 30px 60px -20px #000}
+.lb-bar{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;align-items:center;gap:6px;padding:6px;border-radius:999px;max-width:calc(100% - 32px)}
+.lb-bar b{padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.gbtn{all:unset;cursor:pointer;display:grid;place-items:center;min-width:44px;height:44px;padding:0 14px;border-radius:999px;font-weight:700;background:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.4);transition:transform .15s,background .2s}
+.gbtn:hover{background:rgba(255,255,255,.24)}
+.gbtn:active{transform:scale(.94)}
+.gbtn:focus-visible{outline:2px solid var(--sun)}
+.gbtn.primary{background:linear-gradient(180deg,var(--flamingo),#d9437f);color:#fff}
+
+/* Install */
+.install{padding:22px;display:grid;gap:16px}
+.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.way{padding:18px;border-radius:22px;background:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.18);display:grid;gap:8px;align-content:start;min-width:0}
+.way h3{margin:0;font-size:1.05rem}
+.way .time{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--palm)}
+.way p{margin:0;color:var(--ink-soft);font-size:.92rem}
+.steps{display:flex;gap:10px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:18px;background:rgba(255,255,255,.08);font-size:.9rem}
+.step i{font-style:normal;font-family:var(--font-mono);font-size:.75rem;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:var(--sky-top);font-weight:700;flex:none}
+@media (max-width:760px){.ways{grid-template-columns:minmax(0,1fr)}}
+
+footer{color:var(--ink-faint);font-size:.82rem;max-width:70ch}
+
+/* Floating glass tab bar (phones) */
+.tabbar{
+  display:none;position:fixed;z-index:6;
+  left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));
+  bottom:calc(env(safe-area-inset-bottom,0px) + 14px);
+  padding:6px;border-radius:999px;justify-content:space-around;
+}
+.tabbar a{flex:1;text-align:center;color:var(--ink-soft);text-decoration:none;font-size:.72rem;font-weight:700;padding:8px 4px;border-radius:999px;display:grid;gap:2px;justify-items:center}
+.tabbar a svg{width:22px;height:22px}
+.tabbar a.on{background:rgba(255,255,255,.2);color:var(--ink)}
+
+@media (max-width:760px){
+  nav.links{display:none}
+  .tabbar{display:flex}
+  .regions,.duo{grid-template-columns:minmax(0,1fr)}
+  .timeline li{grid-template-columns:minmax(0,1fr);gap:2px}
+  .glass{border-radius:24px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+
+<div class="wrap">
+  <header class="top glass">
+    <div class="brand">Leonida Hub <small>FAN MADE</small></div>
+    <nav class="links" aria-label="Sections">
+      <a href="#gallery">Screenshots</a>
+      <a href="#leonida">Leonida</a>
+      <a href="#story">Story</a>
+      <a href="#devices">PC &amp; iPhone</a>
+      <a href="#install">Get the app</a>
+    </nav>
+  </header>
+
+  <div class="hero" id="top">
+    <div class="eyebrow">Grand Theft Auto VI · Unofficial fan hub</div>
+    <h1>Welcome to Leonida</h1>
+    <p class="lede">Countdown, map regions, characters and release history for GTA VI, in one place that works on your PC and your iPhone.</p>
+
+    <div class="countdown glass" aria-live="polite">
+      <div class="count-row">
+        <div class="unit"><b id="d">--</b><span>Days</span></div>
+        <div class="unit"><b id="h">--</b><span>Hours</span></div>
+        <div class="unit"><b id="m">--</b><span>Min</span></div>
+        <div class="unit"><b id="s">--</b><span>Sec</span></div>
+      </div>
+      <div class="count-meta">
+        <span>Until <b>19 Nov 2026</b>, the last date Rockstar announced</span>
+        <span class="pill" id="status">PS5 · Xbox Series X|S</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="gallery">
+    <h2>Screenshots</h2>
+    <p class="sub">Official images from Rockstar. Swipe, or tap one to view it full size.</p>
+    <div class="gallery" id="galleryStrip"></div>
+    <p class="credit">Images © Rockstar Games, shown straight from <a href="https://www.rockstargames.com/VI" target="_blank" rel="noopener">rockstargames.com/VI</a>. They are not copied into this site.</p>
+  </section>
+
+  <section id="leonida">
+    <h2>The state of Leonida</h2>
+    <p class="sub">A Florida-inspired state built around Vice City. Pick a region.</p>
+    <div class="regions">
+      <div class="region-list glass" role="tablist" aria-label="Regions" id="regionList"></div>
+      <article class="region-detail glass" id="regionDetail" role="tabpanel"></article>
+    </div>
+  </section>
+
+  <section id="story">
+    <h2>Lucia &amp; Jason</h2>
+    <p class="sub">The series' first duo of leads since the HD era began, and its first female protagonist in the modern games.</p>
+    <div class="duo">
+      <article class="char glass">
+        <div class="role">Protagonist</div>
+        <h3>Lucia Caminos</h3>
+        <p>Introduced in the first trailer in a Leonida Department of Corrections jumpsuit. Out of prison and looking for a way to make it in Vice City.</p>
+      </article>
+      <article class="char glass">
+        <div class="role">Protagonist</div>
+        <h3>Jason Duval</h3>
+        <p>Grew up around grifters and ended up working for drug runners in the Keys. Wants an easy life, and keeps finding the opposite.</p>
+      </article>
+    </div>
+    <div class="cast glass">
+      <strong>Also seen in trailer 2</strong>
+      <span>Cal Hampton</span><span>Boobie Ike</span><span>Dre'Quan Priest</span><span>Real Dimez</span><span>Raul Bautista</span><span>Brian Heder</span>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <h2>How we got here</h2>
+    <div class="timeline glass">
+      <ol>
+        <li><time>2022-02-04</time><div><b>Development confirmed</b><span>Rockstar says the next Grand Theft Auto is well underway.</span></div></li>
+        <li><time>2023-12-05</time><div><b>Trailer 1</b><span>Released early after a leak. Reveals Vice City, Lucia and a 2025 window.</span></div></li>
+        <li><time>2025-05-02</time><div><b>First delay</b><span>Release moved from Fall 2025 to 26 May 2026.</span></div></li>
+        <li><time>2025-05-06</time><div><b>Trailer 2</b><span>Introduces Jason, the wider cast and more of Leonida.</span></div></li>
+        <li><time>2025-11-06</time><div><b>Second delay</b><span>Release moved to 19 November 2026.</span></div></li>
+        <li class="next"><time>2026-11-19</time><div><b>Launch day</b><span>PlayStation 5 and Xbox Series X|S. Check Rockstar's own site for any late change.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="devices">
+    <h2>On PC &amp; iPhone</h2>
+    <div class="seg glass" role="tablist" aria-label="Device">
+      <button role="tab" aria-selected="true" data-dev="pc" id="tab-pc">PC</button>
+      <button role="tab" aria-selected="false" data-dev="iphone" id="tab-iphone">iPhone</button>
+    </div>
+    <div class="device glass" id="dev-pc" role="tabpanel" aria-labelledby="tab-pc">
+      <p class="sub"><span class="pill warn">Not announced</span>&nbsp; Rockstar has not announced a PC version yet. GTA V and Red Dead Redemption 2 both reached PC after their console launches, so a later port is likely but unconfirmed.</p>
+      <ol>
+        <li><b>Use this hub in any desktop browser.</b> The countdown and checklist work in Chrome, Edge, Firefox and Safari.</li>
+        <li><b>Install it as an app.</b> In Chrome or Edge, use the install icon in the address bar to pin Leonida Hub to your taskbar.</li>
+        <li><b>Watch for the PC port.</b> Follow Rockstar Newswire for a Rockstar Games Launcher or Steam listing.</li>
+      </ol>
+    </div>
+    <div class="device glass" id="dev-iphone" role="tabpanel" aria-labelledby="tab-iphone" hidden>
+      <p class="sub">GTA VI itself is not coming to iPhone. Leonida Hub is. Pick an install method below.</p>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Get the app</h2>
+    <div class="install glass">
+      <div class="ways">
+        <div class="way">
+          <span class="time">Easiest · 20 seconds</span>
+          <h3>Home Screen app</h3>
+          <p>Works on any iPhone and on PC. No Mac, no account.</p>
+          <button class="gbtn primary" id="installBtn" type="button">Install Leonida Hub</button>
+        </div>
+        <div class="way">
+          <span class="time">From a Windows PC · 10 min</span>
+          <h3>Native app via Sideloadly</h3>
+          <p>Download <code>LeonidaHub.ipa</code> from the project's GitHub build, open it in Sideloadly, plug in your iPhone and sign in with your Apple ID.</p>
+        </div>
+        <div class="way">
+          <span class="time">From a Mac · 5 min</span>
+          <h3>Native app via Xcode</h3>
+          <p>Double-click <code>LeonidaHub.xcodeproj</code>, choose your Apple ID under Signing, pick your iPhone and press Run.</p>
+        </div>
+      </div>
+      <div class="steps" id="iosSteps" hidden>
+        <div class="step"><i>1</i>Tap <b>Share</b> in Safari's toolbar</div>
+        <div class="step"><i>2</i>Scroll and tap <b>Add to Home Screen</b></div>
+        <div class="step"><i>3</i>Tap <b>Add</b>. Leonida opens full screen</div>
+      </div>
+      <p class="note" id="installNote">The native app uses Apple's Liquid Glass and needs iOS 26.</p>
+    </div>
+  </section>
+
+  <section id="ready">
+    <h2>Launch-day checklist</h2>
+    <p class="sub">Saved in this browser only.</p>
+    <div class="check glass" id="checklist"></div>
+  </section>
+
+  <footer>Leonida Hub is an unofficial fan project and is not affiliated with, endorsed by or connected to Rockstar Games or Take-Two Interactive. Grand Theft Auto and GTA are trademarks of Take-Two Interactive. Dates reflect public announcements and may change.</footer>
+</div>
+
+<nav class="tabbar glass" aria-label="Quick sections">
+  <a href="#top" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>Countdown</a>
+  <a href="#gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 8"/></svg>Shots</a>
+  <a href="#leonida"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg>Map</a>
+  <a href="#story"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="3.5"/><circle cx="16.5" cy="9" r="3"/><path d="M2 20c.5-3.5 3-5.5 6-5.5s5.5 2 6 5.5M14 15c3 0 6 1.5 7 5"/></svg>Story</a>
+  <a href="#install"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M5 20h14"/></svg>Get</a>
+</nav>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Screenshot viewer">
+  <img id="lbImg" alt="">
+  <div class="lb-bar glass">
+    <button class="gbtn" id="lbPrev" type="button" aria-label="Previous">‹</button>
+    <b id="lbCap"></b>
+    <button class="gbtn" id="lbNext" type="button" aria-label="Next">›</button>
+    <button class="gbtn" id="lbClose" type="button" aria-label="Close">✕</button>
+  </div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="liquid-lens" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feImage id="lensMap" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+    <feDisplacementMap in="SourceGraphic" in2="map" scale="38" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<script>
+(function(){
+  /* Countdown: launch at midnight local time on 19 Nov 2026 */
+  var target = new Date(2026,10,19,0,0,0).getTime();
+  var el = {d:document.getElementById('d'),h:document.getElementById('h'),m:document.getElementById('m'),s:document.getElementById('s')};
+  function pad(n){return String(n).padStart(2,'0')}
+  function tick(){
+    var diff = Math.max(0,target-Date.now());
+    var s = Math.floor(diff/1000);
+    el.d.textContent = Math.floor(s/86400);
+    el.h.textContent = pad(Math.floor(s%86400/3600));
+    el.m.textContent = pad(Math.floor(s%3600/60));
+    el.s.textContent = pad(s%60);
+    if(diff===0){document.getElementById('status').textContent='Out now';}
+  }
+  tick(); setInterval(tick,1000);
+
+  /* Regions */
+  var regions = [
+    {name:'Vice City', tag:'Metro', coords:'25.77°N 80.19°W analog', text:'The neon heart of Leonida, modeled on Miami. Beaches, high-rises, nightclubs and a waterfront that never sleeps.', tags:['Ocean Beach','Nightlife','Port']},
+    {name:'Leonida Keys', tag:'Islands', coords:'24.55°N 81.78°W analog', text:'A chain of islands strung along a single highway. Boats, bars, tourists and smuggling routes.', tags:['Bridges','Marinas','Reefs']},
+    {name:'Grassrivers', tag:'Wetland', coords:'25.29°N 80.90°W analog', text:'The swamp country, Leonida’s take on the Everglades. Airboats, alligators and very few witnesses.', tags:['Airboats','Wildlife','Backroads']},
+    {name:'Port Gellhorn', tag:'Coast', coords:'30.16°N 85.66°W analog', text:'A faded Gulf Coast town of motels, strip malls and industry past its prime.', tags:['Motels','Docks','Panhandle']},
+    {name:'Ambrosia', tag:'Inland', coords:'26.72°N 80.66°W analog', text:'Sugar country in the interior, home to refineries, biker gangs and long empty roads.', tags:['Refinery','Bikers','Farmland']},
+    {name:'Mount Kalaga', tag:'Park', coords:'30.40°N 84.25°W analog', text:'A national park in the north with forests, trails and rivers far from the city lights.', tags:['Hiking','Rivers','Hunting']}
+  ];
+  var list = document.getElementById('regionList'), detail = document.getElementById('regionDetail');
+  regions.forEach(function(r,i){
+    var b = document.createElement('button');
+    b.setAttribute('role','tab'); b.id='region-'+i;
+    b.innerHTML = r.name+' <span>'+r.tag.toUpperCase()+'</span>';
+    b.addEventListener('click',function(){pick(i)});
+    list.appendChild(b);
+  });
+  function pick(i){
+    var r = regions[i];
+    Array.prototype.forEach.call(list.children,function(b,j){b.setAttribute('aria-selected',j===i?'true':'false')});
+    detail.setAttribute('aria-labelledby','region-'+i);
+    detail.innerHTML = '<div class="coords">'+r.coords+'</div><h3>'+r.name+'</h3><p>'+r.text+'</p><div class="tags">'+r.tags.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')+'</div>';
+  }
+  pick(0);
+
+  /* Device tabs */
+  document.querySelectorAll('.seg button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.seg button').forEach(function(x){x.setAttribute('aria-selected',x===b?'true':'false')});
+      document.getElementById('dev-pc').hidden = b.dataset.dev!=='pc';
+      document.getElementById('dev-iphone').hidden = b.dataset.dev!=='iphone';
+    });
+  });
+  if(/iPhone|iPad/.test(navigator.userAgent)) document.getElementById('tab-iphone').click();
+
+  /* Checklist */
+  var items = ['Pre-order or pick a store','Free up about 150 GB of storage','Update your console firmware','Rewatch trailer 1 and trailer 2','Book the day off','Charge the controller'];
+  var saved = {};
+  try{ saved = JSON.parse(localStorage.getItem('leonida-check')||'{}') }catch(e){}
+  var box = document.getElementById('checklist');
+  var prog = document.createElement('div'); prog.className='progress';
+  items.forEach(function(t,i){
+    var l = document.createElement('label');
+    l.innerHTML = '<input type="checkbox" id="chk-'+i+'"><span>'+t+'</span>';
+    var c = l.querySelector('input'); c.checked = !!saved[i];
+    c.addEventListener('change',function(){saved[i]=c.checked;try{localStorage.setItem('leonida-check',JSON.stringify(saved))}catch(e){} update()});
+    box.appendChild(l);
+  });
+  box.appendChild(prog);
+  function update(){var n=items.filter(function(_,i){return saved[i]}).length; prog.textContent=n+' of '+items.length+' done';}
+  update();
+
+  /* Tab bar highlight */
+  var tabs = document.querySelectorAll('.tabbar a');
+  var ids = ['top','gallery','leonida','story','install'];
+  window.addEventListener('scroll',function(){
+    var cur = 0;
+    ids.forEach(function(id,i){var e=document.getElementById(id); if(e && e.getBoundingClientRect().top < innerHeight*.4) cur=i;});
+    tabs.forEach(function(a,i){a.classList.toggle('on',i===cur)});
+  },{passive:true});
+
+  /* Gallery: images load directly from Rockstar's servers */
+  var BASE = 'https://www.rockstargames.com/VI/_next/static/media/';
+  var shots = [
+    {f:'desktop.00.5pzu2sm-z4.jpg', t:'Vice City at dusk', k:'Screenshot'},
+    {f:'desktop.0iky3x6.hl8fo.jpg', t:'Ocean Beach', k:'Screenshot'},
+    {f:'mediaDesktop.11iioep6d3wsf.jpg', t:'The job', k:'Artwork'},
+    {f:'VINTAGE_VICE_CITY_PACK_01.05zaof7o1uz.3.jpg', t:'Ocean View Hotel', k:'Artwork'},
+    {f:'featured.0.fbrrtu5j-9_.jpg', t:'Jason & Lucia', k:'Key art'},
+    {f:'musicDesktop.0zwcbzhynnsc-.jpg', t:'Vice City nights', k:'Artwork'},
+    {f:'onlyInLeonidaDesktop.15y2n40f3axwo.jpg', t:'Only in Leonida', k:'Artwork'}
+  ];
+  function src(s,w){return BASE+s.f+'?akim=1&imdensity=1&imwidth='+w}
+  var strip = document.getElementById('galleryStrip');
+  shots.forEach(function(s,i){
+    var b = document.createElement('button'); b.className='shot'; b.type='button'; b.setAttribute('aria-label','Open '+s.t);
+    var img = new Image(); img.alt = s.t; img.loading = i<2?'eager':'lazy'; img.decoding='async'; img.referrerPolicy='no-referrer';
+    img.onerror = function(){
+      img.remove();
+      var m = document.createElement('div'); m.className='missing';
+      m.innerHTML = '<b>'+s.t+'</b>Open the hosted site or rockstargames.com/VI to see this image.';
+      b.insertBefore(m,b.firstChild); b.dataset.missing='1';
+    };
+    img.src = src(s,1280);
+    b.appendChild(img);
+    var cap = document.createElement('div'); cap.className='cap glass'; cap.innerHTML = s.t+'<span>'+s.k+'</span>';
+    b.appendChild(cap);
+    b.addEventListener('click',function(){ if(b.dataset.missing){window.open('https://www.rockstargames.com/VI','_blank','noopener');return;} openLb(i); });
+    strip.appendChild(b);
+  });
+  var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg'), lbCap = document.getElementById('lbCap'), cur = 0, lastFocus;
+  function show(i){cur=(i+shots.length)%shots.length; lbImg.src=src(shots[cur],2560); lbImg.alt=shots[cur].t; lbCap.textContent=shots[cur].t;}
+  function openLb(i){lastFocus=document.activeElement; show(i); lb.hidden=false; document.getElementById('lbClose').focus();}
+  function closeLb(){lb.hidden=true; if(lastFocus) lastFocus.focus();}
+  document.getElementById('lbPrev').onclick=function(){show(cur-1)};
+  document.getElementById('lbNext').onclick=function(){show(cur+1)};
+  document.getElementById('lbClose').onclick=closeLb;
+  lb.addEventListener('click',function(e){if(e.target===lb)closeLb()});
+  document.addEventListener('keydown',function(e){ if(lb.hidden) return;
+    if(e.key==='Escape')closeLb(); if(e.key==='ArrowRight')show(cur+1); if(e.key==='ArrowLeft')show(cur-1); });
+  var tx=null; lb.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
+  lb.addEventListener('touchend',function(e){ if(tx===null)return; var dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>50) show(cur+(dx<0?1:-1)); tx=null; });
+
+  /* Liquid lens: build a displacement map whose edges push the backdrop inward,
+     the way the rim of a glass droplet bends light. Only Chromium supports
+     url() filters in backdrop-filter, so other browsers keep the frosted look. */
+  if (/Chrome\//.test(navigator.userAgent) && !/Mobile|iPhone|iPad/.test(navigator.userAgent)) {
+    var N = 256, mc = document.createElement('canvas'); mc.width = mc.height = N;
+    var mx = mc.getContext('2d'), id = mx.createImageData(N,N), rim = 0.22;
+    for (var y=0;y<N;y++) for (var x=0;x<N;x++){
+      var u = x/(N-1), v = y/(N-1);
+      var dxl = u, dxr = 1-u, dyt = v, dyb = 1-v;
+      var ex = Math.min(dxl,dxr), ey = Math.min(dyt,dyb);
+      var fx = ex<rim ? Math.pow(1-ex/rim,2.2) : 0, fy = ey<rim ? Math.pow(1-ey/rim,2.2) : 0;
+      var sx = (dxl<dxr?1:-1)*fx, sy = (dyt<dyb?1:-1)*fy;
+      var o = (y*N+x)*4;
+      id.data[o] = 128 + sx*127; id.data[o+1] = 128 + sy*127; id.data[o+2] = 128; id.data[o+3] = 255;
+    }
+    mx.putImageData(id,0,0);
+    document.getElementById('lensMap').setAttribute('href', mc.toDataURL());
+    document.documentElement.classList.add('liquid');
+  }
+
+  /* Install */
+  var deferred = null, btn = document.getElementById('installBtn'), note = document.getElementById('installNote');
+  var isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  var standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault(); deferred=e;});
+  if (standalone) { btn.textContent='Installed'; btn.disabled=true; }
+  btn.addEventListener('click',function(){
+    if (deferred) { deferred.prompt(); deferred.userChoice.then(function(r){ if(r.outcome==='accepted'){btn.textContent='Installed';} deferred=null; }); return; }
+    document.getElementById('iosSteps').hidden = false;
+    note.textContent = isIOS
+      ? 'Follow the three steps above in Safari. Leonida Hub then opens from your Home Screen like any app.'
+      : 'On iPhone, open this site in Safari and follow the three steps. On PC, use the install icon in Chrome or Edge’s address bar.';
+  });
+
+  /* Specular highlight follows the pointer */
+  document.addEventListener('pointermove',function(e){
+    document.querySelectorAll('.glass').forEach(function(g){
+      var r = g.getBoundingClientRect();
+      g.style.setProperty('--mx',(e.clientX-r.left)+'px');
+      g.style.setProperty('--my',(e.clientY-r.top)+'px');
+    });
+  },{passive:true});
+
+  /* Living sunset sky: gradient, sun, drifting palm silhouettes and sea shimmer */
+  var cv = document.getElementById('sky'), ctx = cv.getContext('2d');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W,H,dpr;
+  function size(){dpr=Math.min(2,devicePixelRatio||1);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+  size(); addEventListener('resize',size);
+  var css = getComputedStyle(document.documentElement);
+  var C = function(n){return css.getPropertyValue(n).trim()};
+  function palm(x,base,h,sway){
+    ctx.save(); ctx.translate(x,base);
+    ctx.strokeStyle='#120a22'; ctx.fillStyle='#120a22'; ctx.lineCap='round';
+    ctx.lineWidth=h*.035;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.quadraticCurveTo(h*.12,-h*.5,h*.05+sway,-h); ctx.stroke();
+    ctx.translate(h*.05+sway,-h);
+    for(var i=0;i<7;i++){
+      var a = -Math.PI/2 + (i-3)*0.5 + sway*.01;
+      ctx.beginPath(); ctx.moveTo(0,0);
+      var ex=Math.cos(a)*h*.42, ey=Math.sin(a)*h*.42+h*.12;
+      ctx.quadraticCurveTo(Math.cos(a)*h*.25, Math.sin(a)*h*.3-h*.05, ex, ey);
+      ctx.lineWidth=h*.03; ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function draw(t){
+    var g = ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,C('--sky-top')); g.addColorStop(.5,C('--sky-mid')); g.addColorStop(.74,C('--sky-low')); g.addColorStop(.741,C('--sea')); g.addColorStop(1,'#071c26');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    var horizon = H*.74, sx = W*.68, sr = Math.min(W,H)*.16;
+    var sg = ctx.createRadialGradient(sx,horizon-sr*.4,sr*.2,sx,horizon-sr*.4,sr*2.4);
+    sg.addColorStop(0,'rgba(255,214,140,.95)'); sg.addColorStop(.3,'rgba(255,140,110,.35)'); sg.addColorStop(1,'rgba(255,95,158,0)');
+    ctx.fillStyle=sg; ctx.fillRect(0,0,W,horizon);
+    ctx.save(); ctx.beginPath(); ctx.rect(0,0,W,horizon); ctx.clip();
+    ctx.fillStyle=C('--sun'); ctx.beginPath(); ctx.arc(sx,horizon-sr*.4,sr,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=C('--sky-low');
+    for(var k=0;k<5;k++){ctx.fillRect(sx-sr,horizon-sr*.4+k*sr*.18,sr*2,sr*.05+k*1.5)}
+    ctx.restore();
+    for(var y=horizon+6;y<H;y+=9){
+      var w = (Math.sin(y*.05+t*.0012)*.5+.5)*sr*1.4*(1-(y-horizon)/(H-horizon));
+      ctx.fillStyle='rgba(255,180,105,'+(.28*(1-(y-horizon)/(H-horizon)))+')';
+      ctx.fillRect(sx-w/2+Math.sin(y+t*.002)*6,y,w,2);
+    }
+    ctx.fillStyle='#120a22';
+    ctx.beginPath(); ctx.moveTo(0,horizon);
+    for(var x=0;x<=W;x+=W/24){ctx.lineTo(x,horizon-((Math.sin(x*.02)+1)*6)-(x<W*.4?18+Math.sin(x*.11)*14:4))}
+    ctx.lineTo(W,horizon); ctx.fill();
+    var sway = Math.sin(t*.0008)*6;
+    palm(W*.08,horizon+4,Math.min(H*.42,320),sway);
+    palm(W*.17,horizon+4,Math.min(H*.3,230),sway*.7);
+    palm(W*.93,horizon+4,Math.min(H*.36,280),sway*.9);
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>

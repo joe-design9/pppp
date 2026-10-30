@@ -1,0 +1,56 @@
+# Builds LeonidaHub.ipa in the cloud on every push, so you can install the
+# native app from a Windows PC with Sideloadly (no Mac needed).
+# Download it from the "latest" release on this repo's Releases page.
+name: Build iPhone app
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ipa:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Xcode 26
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_26*.app | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Build (unsigned)
+        run: |
+          xcodebuild \
+            -project ios/LeonidaHub.xcodeproj \
+            -scheme LeonidaHub \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Package .ipa
+        run: |
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/LeonidaHub.app Payload/
+          zip -qry LeonidaHub.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LeonidaHub-ipa
+          path: LeonidaHub.ipa
+
+      - name: Publish to the "latest" release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest LeonidaHub.ipa \
+            --title "Leonida Hub (latest build)" \
+            --notes "Unsigned build. Install it with Sideloadly or AltStore using your Apple ID. Requires iOS 26."
