@@ -54,3 +54,79 @@ jobs:
           gh release create latest LeonidaHub.ipa \
             --title "Leonida Hub (latest build)" \
             --notes "Unsigned build. Install it with Sideloadly or AltStore using your Apple ID. Requires iOS 26."
+
+  # Proves the app launches: runs it on an iOS 26 simulator, screenshots
+  # every tab and pushes the images to the ci-screenshots branch.
+  # Rockstar's images are swapped for placeholders here so no copies are committed.
+  screenshots:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Xcode 26
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_26*.app | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Build for simulator
+        run: |
+          xcodebuild \
+            -project ios/LeonidaHub.xcodeproj \
+            -scheme LeonidaHub \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Launch on an iOS 26 iPhone and screenshot each tab
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)["devices"]
+          rts = sorted((r for r in d if "iOS-26" in r), reverse=True)
+          for r in rts:
+              for dev in d[r]:
+                  if dev["name"].startswith("iPhone") and "Pro" in dev["name"]:
+                      print(dev["udid"]); sys.exit()
+          for r in rts:
+              for dev in d[r]:
+                  if dev["name"].startswith("iPhone"):
+                      print(dev["udid"]); sys.exit()
+          ')
+          echo "Simulator: $UDID"
+          xcrun simctl list devices | grep "$UDID"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl ui "$UDID" appearance dark
+          xcrun simctl status_bar "$UDID" override --time 9:41 --batteryLevel 100 --cellularBars 4
+          xcrun simctl install "$UDID" build/Build/Products/Debug-iphonesimulator/LeonidaHub.app
+          mkdir -p shots
+          i=0
+          for name in home screenshots leonida story ready; do
+            xcrun simctl launch "$UDID" com.leonidahub.fanapp.k7q2 -startTab $i -placeholderImages YES
+            sleep 8
+            xcrun simctl io "$UDID" screenshot "shots/$i-$name.png"
+            xcrun simctl terminate "$UDID" com.leonidahub.fanapp.k7q2 || true
+            i=$((i+1))
+          done
+          ls -la shots
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: simulator-screenshots
+          path: shots
+
+      - name: Push screenshots to ci-screenshots branch
+        run: |
+          cp -R shots /tmp/shots
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan ci-screenshots
+          git rm -rf -q .
+          cp /tmp/shots/*.png .
+          git add *.png
+          git commit -q -m "Simulator screenshots for ${GITHUB_SHA::7}"
+          git push -f origin ci-screenshots

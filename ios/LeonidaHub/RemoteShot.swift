@@ -6,7 +6,19 @@ struct RemoteShot: View {
     let url: URL
     var contentMode: ContentMode = .fill
 
+    // Launch with `-placeholderImages YES` to skip downloading Rockstar's
+    // images (used by the CI screenshot run, so no copies end up in the repo).
+    private let usePlaceholders = UserDefaults.standard.bool(forKey: "placeholderImages")
+
     var body: some View {
+        if usePlaceholders {
+            placeholder
+        } else {
+            remote
+        }
+    }
+
+    private var remote: some View {
         AsyncImage(url: url, transaction: Transaction(animation: .smooth)) { phase in
             switch phase {
             case .success(let image):
