@@ -5,7 +5,7 @@ struct RegionsView: View {
     @Namespace private var glass
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             SunsetBackground()
             ScrollView {
                 VStack(spacing: 20) {
@@ -67,6 +67,7 @@ struct RegionsView: View {
                 .padding(20)
                 .padding(.bottom, 40)
             }
+            StatusBarScrim()
         }
     }
 }

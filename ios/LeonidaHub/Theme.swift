@@ -93,6 +93,8 @@ struct ScreenTitle: View {
                 .foregroundStyle(Theme.sun)
             Text(title.uppercased())
                 .font(Theme.display(52))
+                .lineLimit(2)
+                .minimumScaleFactor(0.6)
                 .foregroundStyle(.white)
                 .shadow(color: Theme.flamingo.opacity(0.4), radius: 16, y: 6)
         }

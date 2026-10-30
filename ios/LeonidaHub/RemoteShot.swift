@@ -12,11 +12,23 @@ struct RemoteShot: View {
 
     var body: some View {
         if usePlaceholders {
-            placeholder
+            // A wide stand-in image, so test runs lay out exactly like real photos.
+            Image(uiImage: Self.testImage)
+                .resizable()
+                .aspectRatio(contentMode: contentMode)
         } else {
             remote
         }
     }
+
+    private static let testImage: UIImage = {
+        let size = CGSize(width: 1600, height: 900)
+        return UIGraphicsImageRenderer(size: size).image { ctx in
+            let colors = [UIColor(Theme.skyMid).cgColor, UIColor(Theme.skyLow).cgColor, UIColor(Theme.sea).cgColor]
+            let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: colors as CFArray, locations: [0, 0.6, 1])!
+            ctx.cgContext.drawLinearGradient(gradient, start: .zero, end: CGPoint(x: size.width, y: size.height), options: [])
+        }
+    }()
 
     private var remote: some View {
         AsyncImage(url: url, transaction: Transaction(animation: .smooth)) { phase in
@@ -47,9 +59,12 @@ struct ShotCard: View {
     var height: CGFloat = 200
 
     var body: some View {
-        RemoteShot(url: shot.url())
+        // The image sits in an overlay so its natural width (much wider than
+        // the screen) can never stretch the layout.
+        Color.clear
             .frame(height: height)
             .frame(maxWidth: .infinity)
+            .overlay { RemoteShot(url: shot.url()) }
             .clipShape(.rect(cornerRadius: 28))
             .overlay(alignment: .bottomLeading) {
                 HStack(spacing: 8) {
@@ -62,6 +77,7 @@ struct ShotCard: View {
                 .padding(.vertical, 9)
                 .glassEffect(.regular, in: .capsule)
                 .padding(12)
+                .lineLimit(1)
             }
             .shadow(color: .black.opacity(0.35), radius: 18, y: 12)
     }

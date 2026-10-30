@@ -7,6 +7,13 @@ struct HomeView: View {
     @Namespace private var zoom
 
     var body: some View {
+        ZStack(alignment: .top) {
+            content
+            StatusBarScrim()
+        }
+    }
+
+    private var content: some View {
         ScrollView {
             VStack(spacing: 0) {
                 hero
@@ -14,6 +21,7 @@ struct HomeView: View {
                     countdown
                     platforms
                     latest
+                    ChecklistCard()
                     PCCard()
                     TimelineCard()
                     Text("Unofficial fan app. Not affiliated with Rockstar Games or Take-Two Interactive. Images © Rockstar Games, loaded from rockstargames.com.")
@@ -36,9 +44,10 @@ struct HomeView: View {
 
     // Stretchy, parallax hero photo that fades into the sunset.
     private var hero: some View {
-        RemoteShot(url: HubData.shots[0].url(width: 2000))
+        Color.clear
             .frame(height: 480)
             .frame(maxWidth: .infinity)
+            .overlay { RemoteShot(url: HubData.shots[0].url(width: 2000)) }
             .clipped()
             .overlay {
                 LinearGradient(stops: [
@@ -130,6 +139,17 @@ struct HomeView: View {
             .scrollIndicators(.hidden)
             .scrollClipDisabled()
         }
+    }
+}
+
+/// Keeps scrolled content from showing through behind the clock and battery.
+struct StatusBarScrim: View {
+    var body: some View {
+        Color.clear
+            .frame(height: 0)
+            .frame(maxWidth: .infinity)
+            .background(Theme.skyTop.opacity(0.92), ignoresSafeAreaEdges: .top)
+            .allowsHitTesting(false)
     }
 }
 

@@ -105,9 +105,9 @@ jobs:
           xcrun simctl install "$UDID" build/Build/Products/Debug-iphonesimulator/LeonidaHub.app
           mkdir -p shots
           i=0
-          for name in home screenshots leonida story ready; do
+          for name in home news screenshots leonida story; do
             xcrun simctl launch "$UDID" com.leonidahub.fanapp.k7q2 -startTab $i -placeholderImages YES
-            sleep 8
+            sleep 12
             xcrun simctl io "$UDID" screenshot "shots/$i-$name.png"
             xcrun simctl terminate "$UDID" com.leonidahub.fanapp.k7q2 || true
             i=$((i+1))

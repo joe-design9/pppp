@@ -6,7 +6,7 @@ struct StoryView: View {
     private let cast = ["Cal Hampton", "Boobie Ike", "Dre'Quan Priest", "Real Dimez", "Raul Bautista", "Brian Heder"]
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             SunsetBackground()
             ScrollView {
                 VStack(spacing: 18) {
@@ -15,8 +15,9 @@ struct StoryView: View {
                     HStack(spacing: 12) {
                         ForEach(HubData.posters) { poster in
                             Button { selected = poster } label: {
-                                RemoteShot(url: poster.url(width: 1080))
+                                Color.clear
                                     .aspectRatio(1080.0 / 1600.0, contentMode: .fit)
+                                    .overlay { RemoteShot(url: poster.url(width: 1080)) }
                                     .clipShape(.rect(cornerRadius: 24))
                                     .overlay(alignment: .bottom) {
                                         Text(poster.title.uppercased())
@@ -61,6 +62,7 @@ struct StoryView: View {
                 .padding(20)
                 .padding(.bottom, 40)
             }
+            StatusBarScrim()
         }
         .fullScreenCover(item: $selected) { poster in
             ShotViewer(shots: HubData.posters, start: poster)
